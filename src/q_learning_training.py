@@ -1,6 +1,7 @@
 import itertools
 import numpy as np
 import random
+from typing import List, Dict, Tuple
 
 
 def update_q_table(q_table, state, action, reward, next_state, alpha, gamma):
@@ -29,22 +30,28 @@ def adjust_epsilon(epsilon, min_epsilon, decay_rate):
 
 
 def train_agent(
-    initial_sticks, num_episodes, alpha, gamma, epsilon, min_epsilon, decay_rate
+    initial_sticks: List[int],
+    num_episodes: int,
+    alpha: float,
+    gamma: float,
+    epsilon: float,
+    min_epsilon: float,
+    decay_rate: float,
 ):
     q_table = create_q_table()
-    rewards = []
+    rewards: List[int] = []
 
     for episode in range(num_episodes):
-        state = initial_sticks.copy()
-        total_reward = 0
+        state: List[int] = initial_sticks.copy()
+        total_reward: int = 0
 
         # Dynamically adjust epsilon based on the episode
-        adjusted_epsilon = adjust_epsilon_dynamic(
+        adjusted_epsilon: float = adjust_epsilon_dynamic(
             epsilon, num_episodes, episode, min_epsilon, decay_rate
         )
 
         while state:
-            dice_roll = np.random.randint(2, 13)
+            dice_roll: int = np.random.randint(2, 13)
             actions = valid_actions(state, dice_roll)
             if not actions:
                 break  # No valid actions, game over
@@ -64,7 +71,7 @@ def train_agent(
 
         if episode % int(num_episodes / 10) == 0:
             print(
-                f"Episode {episode} - Completion: {100 * round(episode/num_episodes, 2):.0f}% - Total of Rewards: {sum(rewards)} - Epsilon: {adjusted_epsilon}"
+                f"Episode {episode:,}/{num_episodes:,} - Win Rate: {sum(rewards)/(episode + 1):.4f} - Epsilon: {adjusted_epsilon:.2f}"
             )
 
     return q_table, rewards
