@@ -1,5 +1,6 @@
 import ray
 from ray.rllib.agents.dqn import DQNTrainer, DEFAULT_CONFIG
+from ray.rllib.algorithms.dqn import D
 from ray.tune.registry import register_env
 import gymnasium as gym
 from src.dq_learning_training import *
